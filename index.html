@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Useless Text Encryption</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        main {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        textarea {
+            width: 100%;
+            padding: 0.5rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 1rem;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            min-height: 10vh;
+        }
+        .copy-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-left: 0.5rem;
+        }
+        .copy-btn:hover {
+            background-color: #218838;
+        }
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            display: none;
+            z-index: 1000;
+        }
+        #popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            border-radius: 1rem;
+            padding: 20px;
+            width: 80%;
+            max-width: 500px;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+        }
+        #popup h3 {
+            margin-top: 0;
+        }
+        #close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Useless Text Encryption</h1>
+    </header>
+
+    <main>
+        <label for="text">Enter Your Text</label>
+        <textarea id="text" rows="4" placeholder="Enter text here..."></textarea>
+        <button onclick="encript()">Encrypt</button>
+        <div>
+            <h2>Result:</h2>
+            <div id="result"></div>
+            <button onclick="copy()" class="copy-btn"><i class="fa-solid fa-copy"></i> Copy</button>
+            <button onclick="popupOpen()"><i class="fa-solid fa-question"></i> Info</button>
+        </div>
+    </main>
+
+    <div id="popup">
+        <button id="close" onclick="popupClose()"><i class="fa-solid fa-xmark"></i></button>
+        <h3>Why this site?</h3>
+        <p>This site is a part of my 30-day, 30-useless-sites series on <a href="https://x.com/1Zabbo1" style="color: #1DA1F2;"><i class="fa-brands fa-x-twitter"></i></a></p>
+        <p>In this series, I create a useless site every day for 30 days. This is the first site of that series. It's a useless encryptor because anything you encrypt here cannot ever be decrypted.</p>
+        <p>Also, I dislike the letter 'M', so if you were wondering why there's a middle finger for 'M', now you know.</p>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        let textArea = document.getElementById('text');
+        let resultArea = document.getElementById('result');
+        let toast = document.getElementById('toast');
+        let popup = document.getElementById('popup');
+
+        let alpha = 'abcdefghijklnopqrstuvwxyz';
+
+        function encript() {
+            let value = textArea.value;
+            value = value.toLowerCase().split('');
+            for (let i = 0; i < value.length; i++) {
+                if (value[i] === " ") {
+                    value[i] = " ";
+                } else if (alpha.includes(value[i])) {
+                    let letter = alpha[Math.floor(Math.random() * alpha.length)];
+                    value[i] = letter;
+                } else if (value[i] === "m") {
+                    value[i] = "🖕";
+                } else {
+                    value[i] = Math.floor(Math.random() * 10);
+                }
+            }
+            value = value.join('');
+            resultArea.innerHTML = `${value}`;
+        }
+
+        function copy() {
+            let text = resultArea.innerText;
+            let textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            toast.innerText = 'Text copied to clipboard!';
+            toast.style.display = 'block';
+
+            setTimeout(function() {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        function popupOpen() {
+            popup.style.display = 'block';
+        }
+
+        function popupClose() {
+            popup.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
